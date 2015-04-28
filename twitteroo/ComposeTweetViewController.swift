@@ -7,15 +7,20 @@
 //
 
 import UIKit
+let maxCharacterCount = 140
 
-class ComposeTweetViewController: UIViewController {
+class ComposeTweetViewController: UIViewController, UITextViewDelegate {
 
+    
+    @IBOutlet weak var charactersLeftLabel: UILabel!
     @IBOutlet weak var screenNameLabel: UILabel!
     @IBOutlet weak var nameLabel: UILabel!
     var user: User?
     @IBOutlet weak var tweetButton: UIButton!
     @IBOutlet weak var userImage: UIImageView!
     @IBOutlet weak var tweetTextView: UITextView!
+    var replyScreenname: String?
+    var overCharLimit = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,6 +34,32 @@ class ComposeTweetViewController: UIViewController {
         userImage.setImageWithURL(NSURL(string: user!.profileImageUrl!))
         nameLabel.text = user?.name
         screenNameLabel.text = "@" + user!.screenname!
+        tweetTextView.delegate = self
+        
+        //If it's a reply to someone, start with their screenname
+        if let initText = replyScreenname {
+            tweetTextView.text = "@" + initText + " "
+            var charCount = count(tweetTextView.text)
+            charactersLeftLabel.text = String(maxCharacterCount - charCount)
+        }
+        
+        tweetTextView.becomeFirstResponder()
+    }
+    
+    func textViewDidChange(textView: UITextView) {
+        var charCount = count(textView.text)
+        charactersLeftLabel.text = String(maxCharacterCount - charCount)
+        
+        overCharLimit = charCount > maxCharacterCount
+        
+        //Deal with color
+        if charCount == maxCharacterCount + 1 {
+            tweetButton.backgroundColor = UIColor.grayColor()
+            tweetButton.adjustsImageWhenHighlighted = false
+        } else if charCount == maxCharacterCount {
+            tweetButton.backgroundColor = UIColor(red: 85.0/255, green: 172.0/255, blue: 238.0/255, alpha: 1.0)
+            tweetButton.adjustsImageWhenHighlighted = true
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -38,7 +69,7 @@ class ComposeTweetViewController: UIViewController {
     
     @IBAction func tweetButtonClicked(sender: AnyObject) {
         println("Tweet button clicked")
-        if tweetTextView.text == "" {
+        if tweetTextView.text == "" || overCharLimit {
             return
         }
         

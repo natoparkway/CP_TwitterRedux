@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, TweetCellDelegate {
 
     @IBOutlet weak var tableView: UITableView!
     var tweets: [Tweet]? = [Tweet]()
@@ -45,9 +45,11 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell = tableView.dequeueReusableCellWithIdentifier("TweetCell", forIndexPath: indexPath) as! TweetCell
+        cell.selectionStyle = UITableViewCellSelectionStyle.None    //Prevents highlighting
         var tweet = tweets![indexPath.row]
         
         cell.updateContents(tweet)
+        cell.delegate = self
         
         return cell
     }
@@ -62,6 +64,36 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         return 0
         
     }
+    
+//TweetCellDelegate Methods
+    
+    func replyButtonPressed(tweet: Tweet) {
+        var storyboard = UIStoryboard(name: "Main", bundle: nil)
+        var vc = storyboard.instantiateViewControllerWithIdentifier("ComposeTweetVC") as! ComposeTweetViewController
+        vc.user = User.currentUser
+        vc.replyScreenname = tweet.screenName
+        self.presentViewController(vc, animated: true, completion: nil)
+    }
+    
+    func retweetButtonPressed(tweet: Tweet, alreadyRetweeted: Bool) {
+        println("retweet delegate")
+        if !alreadyRetweeted {
+            TwitterClient.sharedInstance.retweet(tweet.id!)
+        } else {
+            //Unretweet
+        }
+    }
+    
+    func favoriteButtonPressed(tweet: Tweet, alreadyFavorited: Bool) {
+        if !alreadyFavorited {
+            TwitterClient.sharedInstance.favoriteTweet(tweet)
+        } else {
+            TwitterClient.sharedInstance.unfavoriteTweet(tweet)
+        }
+    }
+    
+    
+//End of delegate methods
     
     
     override func didReceiveMemoryWarning() {
@@ -82,10 +114,25 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
         
-        if segue.identifier! == "ComposeTweetSegue" {
-            var ComposeTweetVC = segue.destinationViewController as! ComposeTweetViewController
-            ComposeTweetVC.user = User.currentUser
+        if let id = segue.identifier {
+            if id == "ComposeTweetSegue" {
+                var ComposeTweetVC = segue.destinationViewController as! ComposeTweetViewController
+                ComposeTweetVC.user = User.currentUser
+            }
+            
+            if id == "TweetInfo" {
+                println("Tweet Info")
+                println(User.currentUser!.name)
+                var indexPath = tableView.indexPathForCell(sender as! TweetCell)!
+                var nav = segue.destinationViewController as! UINavigationController
+                var TweetInfoVC = nav.topViewController as! TweetInfoViewController
+                TweetInfoVC.tweet = tweets![indexPath.row]
+            }
+            
+        } else {
+            // do something
         }
+
     }
 
 }

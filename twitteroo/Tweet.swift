@@ -18,10 +18,12 @@ class Tweet: NSObject {
     var favorited = false
     var retweeted = false
     var screenName: String?
+    var id: Int?
+    var retweetID: Int?
     
     
     init(dictionary: NSDictionary) {
-        //println(dictionary)
+        id = dictionary["id"] as? Int
         user = User(dictionary: dictionary["user"] as! NSDictionary)
         text = dictionary["text"] as? String
         createdAtString = dictionary["created_at"] as? String

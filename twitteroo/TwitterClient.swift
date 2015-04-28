@@ -89,6 +89,48 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
 
     }
     
+    func retweet(id: Int) -> Int? {
+        var retweetID: Int?
+        TwitterClient.sharedInstance.POST("1.1/statuses/retweet/\(id).json", parameters: nil, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
+                println("Retweeting Successful")
+                retweetID = id
+            
+            }, failure: { (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
+                println("Error in retweeting tweet")
+                
+                
+        })
+        
+        return retweetID
+        
+    }
+    
+    func unfavoriteTweet(tweet: Tweet) {
+        var params = NSMutableDictionary()
+        params["id"] = tweet.id!
+        
+        TwitterClient.sharedInstance.POST("1.1/favorites/destroy.json", parameters: params, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
+                println("Unfavoriting Successful")
+            
+            }, failure: { (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
+                println("Error in unfavoriting tweet")
+                
+        })
+    }
+    
+    func favoriteTweet(tweet: Tweet) {
+        var params = NSMutableDictionary()
+        params["id"] = tweet.id!
+        
+        TwitterClient.sharedInstance.POST("1.1/favorites/create.json", parameters: params, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
+            println("favoriting Successful")
+            
+            }, failure: { (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
+                println("Error in favoriting tweet")
+                
+        })
+    }
+    
     func postTweet(tweetText: String) {
         var params = NSMutableDictionary()
         params["status"] = tweetText
