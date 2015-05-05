@@ -22,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if User.currentUser != nil {
             //Go to the logged in screen - no need to re login if we already have a user
             println("Current User Detected: \(User.currentUser?.name)")
-            var vc = storyboard.instantiateViewControllerWithIdentifier("TweetsViewController") as! UIViewController
+            var vc = storyboard.instantiateViewControllerWithIdentifier("SlideContainerVC") as! UIViewController
             
             window?.rootViewController = vc //Moves us to the TweetsViewController
         }

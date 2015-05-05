@@ -16,6 +16,7 @@ protocol TweetCellDelegate {
     func replyButtonPressed(tweet: Tweet)
     func retweetButtonPressed(tweet: Tweet, alreadyRetweeted: Bool)
     func favoriteButtonPressed(tweet: Tweet, alreadyFavorited: Bool)
+    func thumbnailImagePressed(tweet: Tweet)
 }
 
 class TweetCell: UITableViewCell {
@@ -23,6 +24,7 @@ class TweetCell: UITableViewCell {
     @IBOutlet weak var retweetButton: UIButton!
     @IBOutlet weak var favoriteButton: UIButton!
     @IBOutlet weak var thumbnailImage: UIImageView!
+
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var twitterHandleLabel: UILabel!
     @IBOutlet weak var minutesSinceLabel: UILabel!
@@ -34,6 +36,7 @@ class TweetCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        
         // Initialization code
         
         self.nameLabel.preferredMaxLayoutWidth = nameLabel.frame.size.width
@@ -51,12 +54,14 @@ class TweetCell: UITableViewCell {
         retweeted = !retweeted
         
         //THIS DOES NOT ACTUALLY WORK. NEED TO SEND INFORMATION TO TWEETSVIEWCONTROLLER IN DELEGATE TO MAKE IT PERSIST
-        if retweeted {
-            retweetButton.setImage(UIImage(named: "retweet_icon_on"), forState: .Normal)
-        } else {
-            retweetButton.setImage(UIImage(named: "retweet_icon_off"), forState: .Normal)
-        }
+//        if retweeted {
+//            retweetButton.setImage(UIImage(named: "retweet_icon_on"), forState: .Normal)
+//        } else {
+//            retweetButton.setImage(UIImage(named: "retweet_icon_off"), forState: .Normal)
+//        }
     }
+    
+    
     
     
     @IBAction func favoriteButtonPressed(sender: AnyObject) {
@@ -64,11 +69,16 @@ class TweetCell: UITableViewCell {
         favorited = !favorited
         
         //THIS DOES NOT ACTUALLY WORK. NEED TO SEND INFORMATION TO TWEETSVIEWCONTROLLER IN DELEGATE TO MAKE IT PERSIST
-        if favorited {
-            favoriteButton.setImage(UIImage(named: "favorite_icon_on"), forState: .Normal)
-        } else {
-            favoriteButton.setImage(UIImage(named: "favorite_icon_off"), forState: .Normal)
-        }
+//        if favorited {
+//            favoriteButton.setImage(UIImage(named: "favorite_icon_on"), forState: .Normal)
+//        } else {
+//            favoriteButton.setImage(UIImage(named: "favorite_icon_off"), forState: .Normal)
+//        }
+    }
+    
+    @IBAction func imageWasPressed(sender: AnyObject) {
+        delegate?.thumbnailImagePressed(tweet)
+        
     }
 
     override func layoutSubviews() {

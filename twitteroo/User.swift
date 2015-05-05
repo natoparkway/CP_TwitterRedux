@@ -20,6 +20,11 @@ class User: NSObject {
     var profileImage: UIImage! = UIImage()
     var tagline: String?
     var dictionary: NSDictionary?
+    var numFollowing: Int!
+    var numFollowers: Int!
+    var numTweets: Int!
+    var userDescription: String!
+    var id: Int!
     
     init(dictionary: NSDictionary) {
         self.dictionary = dictionary
@@ -27,12 +32,28 @@ class User: NSObject {
         screenname = dictionary["screen_name"] as? String
         profileImageUrl = dictionary["profile_image_url"] as? String
         tagline = dictionary["tagline"] as? String
+        numFollowing = dictionary["favourites_count"] as! Int
+        numFollowers = dictionary["followers_count"] as! Int
+        numTweets = dictionary["statuses_count"] as! Int
+        id = dictionary["id"] as! Int
+        userDescription = dictionary["description"] as! String
+        println(userDescription)
+        super.init()
+        updateProfilePhoto()
         
-//        var data = NSData(contentsOfURL: NSURL(string: profileImageUrl!)!)
-//        
-//        NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
-//            self.profileImage = UIImage(data: data!)
-//        }
+    }
+    
+    func updateProfilePhoto() {
+        var queue = NSOperationQueue()
+        var operation = NSBlockOperation { ()
+            var data = NSData(contentsOfURL: NSURL(string: self.profileImageUrl!)!)
+            
+            NSOperationQueue.mainQueue().addOperationWithBlock { ()
+                self.profileImage = UIImage(data: data!)
+                
+            }
+        }
+        queue.addOperation(operation)
     }
     
     func logout() {

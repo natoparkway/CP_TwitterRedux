@@ -19,6 +19,8 @@ class TweetInfoViewController: UIViewController {
     @IBOutlet weak var screenNameLabel: UILabel!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var thumbnailImage: UIImageView!
+    
+    //Properties
     var retweeted = false
     var favorited = false
     var tweet: Tweet?
@@ -82,25 +84,10 @@ class TweetInfoViewController: UIViewController {
         nameLabel.text = tweeter!.name
         screenNameLabel.text = "@" + tweeter!.screenname!
         
-        var thumbnailURL = NSURL(string: tweeter!.profileImageUrl!)!
-        thumbnailImage.setImageWithURL(thumbnailURL)
+        thumbnailImage.image = tweeter!.profileImage
         
         tweetDateLabel.text = tweet!.createdAtString!
         tweetText.text = tweet!.text
-        
-        
-//        var queue = NSOperationQueue()
-//        var operation = NSBlockOperation { () -> Void in
-//            var data = NSData(contentsOfURL: NSURL(string: tweeter.profileImageUrl!)!)
-//            
-//            NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
-//                self.thumbnailImage = UIImage(data: data!)
-//                
-//            }
-//        }
-//        queue.addOperation(operation)
-
-        
         
     }
     

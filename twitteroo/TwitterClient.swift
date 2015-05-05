@@ -46,6 +46,8 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
     
     }
     
+//------------------CLIENT TWEETING METHODS----------------------
+    
     //GET Home Timeline
     func homeTimelineWithParams(params: NSDictionary?, completion: (tweets: [Tweet]?, error: NSError?) -> ()) {
         GET("1.1/statuses/home_timeline.json", parameters: params, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
@@ -54,7 +56,7 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
                 completion(tweets: tweets, error: nil)
             
             }, failure: { (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
-                println("error")
+                println("Error in fetching home timeline")
                 completion(tweets: nil, error: error)
             })
 
@@ -89,6 +91,7 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
 
     }
     
+    //RETWEET A TWEET
     func retweet(id: Int) -> Int? {
         var retweetID: Int?
         TwitterClient.sharedInstance.POST("1.1/statuses/retweet/\(id).json", parameters: nil, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
@@ -105,6 +108,7 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
         
     }
     
+    //UNFAVORITE A TWEET
     func unfavoriteTweet(tweet: Tweet) {
         var params = NSMutableDictionary()
         params["id"] = tweet.id!
@@ -118,6 +122,7 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
         })
     }
     
+    //FAVORITE A TWEET
     func favoriteTweet(tweet: Tweet) {
         var params = NSMutableDictionary()
         params["id"] = tweet.id!
@@ -131,6 +136,8 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
         })
     }
     
+    
+    //POST TWEET
     func postTweet(tweetText: String) {
         var params = NSMutableDictionary()
         params["status"] = tweetText
@@ -145,6 +152,13 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
 
     }
     
+    //GET USER TWEETS
+    func getUserTweets(screenname: String) -> [Tweet] {
+        var tweets = [Tweet]()
+        
+        return tweets
+    }
+//
     
   
 }

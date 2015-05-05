@@ -31,7 +31,7 @@ class ComposeTweetViewController: UIViewController, UITextViewDelegate {
         tweetTextView.layer.borderColor = UIColor.grayColor().CGColor
         tweetTextView.layer.borderWidth = 1.0
         
-        userImage.setImageWithURL(NSURL(string: user!.profileImageUrl!))
+        userImage.image = user!.profileImage
         nameLabel.text = user?.name
         screenNameLabel.text = "@" + user!.screenname!
         tweetTextView.delegate = self
